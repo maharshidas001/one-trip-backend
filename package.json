@@ -2,11 +2,12 @@
   "name": "one-trip-backend",
   "version": "1.0.0",
   "description": "A backend for One Trip frontend uses AI to generate trips for users.",
-  "main": "server.ts",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon ./src/server.ts",
-    "start": "node ./src/server.ts"
+    "dev": "nodemon ./src/server.js",
+    "start": "node ./src/server.js",
+    "build": "tsc"
   },
   "keywords": [
     "rest-api",

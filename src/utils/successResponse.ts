@@ -7,7 +7,11 @@ interface ISuccessResponse {
   data?: any;
 };
 
-export const successResponse = (message: string, statusCode: number, data?: any) => {
+export const successResponse = (
+  message: string,
+  statusCode: number,
+  data?: any
+) => {
   let response: ISuccessResponse = {
     message: message || 'Success',
     statusCode,
