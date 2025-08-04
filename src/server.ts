@@ -5,10 +5,12 @@ import connectDB from "./services/db.js";
 const port = envConfig.port || 3000;
 
 const startServer = () => {
-  connectDB
+  connectDB()
     .then(() => {
       app.listen(port, () => {
         console.log(`Server started on http://localhost:${port}\n`);
       });
     });
 };
+
+startServer();
