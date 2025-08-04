@@ -14,8 +14,10 @@ app.use(express.json());
 
 // Routers
 import { homeRouter } from "./routers/home.routes.js";
+import { userRouter } from "./routers/user.routes.js";
 
 app.use('/api/v1', homeRouter);
+app.use('/api/v1/user', userRouter);
 
 // Global error handler
 app.use(globalErrorHandler);
