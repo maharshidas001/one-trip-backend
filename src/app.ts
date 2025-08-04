@@ -1,6 +1,8 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from 'cors';
+
+// Custom
 import { globalErrorHandler } from "./middlewares/globalErrorHandler.js";
 
 const app = express();
@@ -9,6 +11,11 @@ const app = express();
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
+
+// Routers
+import { homeRouter } from "./routers/home.routes.js";
+
+app.use('/api/v1', homeRouter);
 
 // Global error handler
 app.use(globalErrorHandler);
