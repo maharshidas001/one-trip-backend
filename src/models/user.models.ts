@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 import { AppError } from "../utils/appError.js";
 import bcrypt from 'bcrypt';
 import jwt, { type SignOptions } from 'jsonwebtoken';
@@ -8,13 +8,11 @@ interface IUserSchema extends Document {
   fullName: string;
   email: string;
   password: string;
+  accessToken?: string;
+  refreshToken?: string;
   comparePassword: (password: string) => Promise<boolean>;
   createAccessToken: () => string;
   createRefreshToken: () => string;
-};
-
-interface IUserModel extends Model<IUserSchema> {
-  renewAccessToken(refreshToken: string): Promise<string | null>;
 };
 
 const userSchema = new Schema<IUserSchema>({
@@ -35,14 +33,22 @@ const userSchema = new Schema<IUserSchema>({
   password: {
     type: String,
     required: [true, 'Password is required.'],
-    min: 6
+    minlength: 6
+  },
+  accessToken: {
+    type: String,
+    default: null
+  },
+  refreshToken: {
+    type: String,
+    default: null
   }
 }, { timestamps: true });
 
 // Mongoose Middlewares
 // Hash password before saving
 userSchema.pre('save', async function (next) {
-  if (!this.isModified(this.password)) return next();
+  if (!this.isModified('password')) return next();
 
   try {
     const salt = await bcrypt.genSalt(8);
@@ -74,19 +80,4 @@ userSchema.methods.createRefreshToken = function (): string {
   );
 };
 
-// Renew Access Token
-userSchema.statics.renewAccessToken = async function (refreshToken: string): Promise<string | null> {
-  try {
-    const payload = jwt.verify(refreshToken, envConfig.refreshSecret) as { sub: string };
-
-    const user = await this.findById(payload.sub);
-    if (!user._id) return null;
-
-    return jwt.sign({ sub: payload.sub }, envConfig.accessSecret, { expiresIn: envConfig.accessExpiry as any })
-  } catch (error) {
-    if (envConfig.nodeEnv == 'development') console.log("JWT Error:", error);
-    return null;
-  }
-};
-
-export const User = mongoose.model<IUserSchema, IUserModel>("User", userSchema);
+export const User = mongoose.model<IUserSchema>("User", userSchema);

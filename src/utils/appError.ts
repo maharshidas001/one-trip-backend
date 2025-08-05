@@ -9,7 +9,6 @@ export class AppError extends Error {
 
     Object.setPrototypeOf(this, new.target.prototype);
 
-    message = message || 'Something went wrong!';
     this.statusCode = statusCode;
     this.success = false;
   };
