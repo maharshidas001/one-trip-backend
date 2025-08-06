@@ -55,6 +55,13 @@ const registerUser = asyncHandler(async (
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
   });
 
+  res.cookie("userId", userRes._id, {
+    httpOnly: true,
+    secure: envConfig.nodeEnv === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
+  });
+
   // delete the password before send to api
   const userObj = userRes.toObject() as Record<string, any>;
   delete userObj.password;
@@ -104,6 +111,13 @@ const loginUser = asyncHandler(async (
   });
 
   res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: envConfig.nodeEnv === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
+  });
+
+  res.cookie("userId", userRes._id, {
     httpOnly: true,
     secure: envConfig.nodeEnv === "production",
     sameSite: "strict",

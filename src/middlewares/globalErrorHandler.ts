@@ -10,13 +10,15 @@ export const globalErrorHandler = (
 ) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal Server Error!';
+  const error = err.error;
 
   const isDevEnv = envConfig.nodeEnv === 'development';
-  console.log('GLOBAL ERROR HANDLER :: ', err);
 
   const response = {
     success: err.success,
     message,
+    statusCode,
+    error,
     ...(isDevEnv && { stack: err.stack }),
   };
 

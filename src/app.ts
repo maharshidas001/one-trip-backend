@@ -16,9 +16,11 @@ app.use(express.urlencoded({ extended: true }));
 // Routers
 import { homeRouter } from "./routers/home.routes.js";
 import { userRouter } from "./routers/user.routes.js";
+import { tripRouter } from "./routers/trip.routes.js";
 
 app.use('/api/v1', homeRouter);
 app.use('/api/v1/user', userRouter);
+app.use('/api/v1/trip', tripRouter);
 
 // Global error handler
 app.use(globalErrorHandler);
