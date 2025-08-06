@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
 import { AppError } from "../utils/appError.js";
 import bcrypt from 'bcrypt';
-import jwt, { type SignOptions } from 'jsonwebtoken';
+import { sign, verify } from '../utils/jwt.js';
 import { envConfig } from "../config/envConfig.js";
 
 interface IUserSchema extends Document {
@@ -67,16 +67,16 @@ userSchema.methods.comparePassword = async function (password: string): Promise<
 };
 
 // Create Access token
-userSchema.methods.createAccessToken = function (): string {
-  return jwt.sign(
-    { sub: this._id.toString(), email: this.email }, envConfig.accessSecret, { expiresIn: envConfig.accessExpiry as any }
+userSchema.methods.createAccessToken = async function (): Promise<string> {
+  return await sign(
+    { sub: this._id.toString(), email: this.email }, envConfig.accessSecret, { expiresIn: envConfig.accessExpiry }
   )
 };
 
 // Create refresh token
-userSchema.methods.createRefreshToken = function (): string {
-  return jwt.sign(
-    { sub: this._id.toString() }, envConfig.refreshSecret, { expiresIn: envConfig.refreshExpiry as any }
+userSchema.methods.createRefreshToken = async function (): Promise<string> {
+  return await sign(
+    { sub: this._id.toString() }, envConfig.refreshSecret, { expiresIn: envConfig.refreshExpiry }
   );
 };
 

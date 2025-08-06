@@ -2,14 +2,6 @@ import { config } from "dotenv";
 
 config();
 
-const getEnv = (name: string): string => {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(`Missing environment variable: ${name}`);
-  }
-  return value;
-}
-
 interface IEnvConfig {
   port: string;
   nodeEnv: string;
@@ -18,16 +10,18 @@ interface IEnvConfig {
   refreshExpiry: string;
   refreshSecret: string;
   mongodbUri: string;
+  geminiKey: string;
 }
 
-const _conf: Readonly<IEnvConfig> = {
-  port: getEnv("PORT"),
-  nodeEnv: getEnv("NODE_ENV"),
-  accessExpiry: getEnv("ACCESS_TOKEN_EXPIRY"),
-  accessSecret: getEnv("ACCESS_TOKEN_SECRET"),
-  refreshExpiry: getEnv("REFRESH_TOKEN_EXPIRY"),
-  refreshSecret: getEnv("REFRESH_TOKEN_SECRET"),
-  mongodbUri: getEnv("MONGODB_URI"),
+const _conf: IEnvConfig = {
+  port: process.env.PORT as string,
+  nodeEnv: process.env.NODE_ENV as string,
+  accessExpiry: process.env.ACCESS_TOKEN_EXPIRY as string,
+  accessSecret: process.env.ACCESS_TOKEN_SECRET as string,
+  refreshExpiry: process.env.REFRESH_TOKEN_EXPIRY as string,
+  refreshSecret: process.env.REFRESH_TOKEN_SECRET as string,
+  mongodbUri: process.env.MONGODB_URI as string,
+  geminiKey: process.env.GEMINI_API_KEY as string,
 };
 
 export const envConfig = Object.freeze(_conf);

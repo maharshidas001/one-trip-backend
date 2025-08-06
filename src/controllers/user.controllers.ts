@@ -4,7 +4,6 @@ import { successResponse } from "../utils/successResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import type { NextFunction, Request, Response } from "express";
 import { envConfig } from "../config/envConfig.js";
-import jwt from "jsonwebtoken";
 
 // Register User -------------------
 const registerUser = asyncHandler(async (
@@ -33,8 +32,8 @@ const registerUser = asyncHandler(async (
   }
 
   // create tokens
-  const accessToken: string = userRes.createAccessToken();
-  const refreshToken: string = userRes.createRefreshToken();
+  const accessToken: string = await userRes.createAccessToken();
+  const refreshToken: string = await userRes.createRefreshToken();
 
   // save tokens to database
   userRes.accessToken = accessToken;
@@ -88,8 +87,8 @@ const loginUser = asyncHandler(async (
   }
 
   // create tokens
-  const accessToken: string = userRes.createAccessToken();
-  const refreshToken: string = userRes.createRefreshToken();
+  const accessToken: string = await userRes.createAccessToken();
+  const refreshToken: string = await userRes.createRefreshToken();
 
   // save tokens to database
   userRes.accessToken = accessToken;
@@ -126,9 +125,9 @@ const logoutUser = (req: Request, res: Response) => {
 };
 
 // Check if user is authenticated
-const authStatus = asyncHandler(async (req: Request, res: Response) => {
+const authStatus = (req: Request, res: Response) => {
   res.status(200).json(successResponse('User is Authenticated', 200, { isAuthenticated: true }));
-})
+};
 
 export {
   registerUser,
