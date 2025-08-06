@@ -6,6 +6,7 @@ import { envConfig } from "../config/envConfig.js";
 import { Trip } from "../models/trip.models.js";
 import { generateTrip } from "../services/genai.js";
 import type { TripItinerary, TripRequest } from "../types/interface.js";
+import { getDestinationImage } from "../services/image.js";
 
 // Create Trip
 const createTrip = asyncHandler(async (
@@ -22,12 +23,16 @@ const createTrip = asyncHandler(async (
     // generate the trip
     const generatedTrip = await generateTrip({ budget, dateRange, destination, foodPreferance, stay, travelType, travelingWith, travlerCount });
     // parse the trip
-    const completeGeneratedTrip: TripItinerary = JSON.parse(generatedTrip.text!);
+    const completeGeneratedTrip = JSON.parse(generatedTrip.text!);
+
+    // get the destination image
+    const imageUrl: string = await getDestinationImage(destination);
 
     // save the trip
     const newTrip = new Trip({
       ...completeGeneratedTrip,
-      createdBy: sub
+      createdBy: sub,
+      imageUrl,
     });
     await newTrip.save();
 

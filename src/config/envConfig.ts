@@ -11,6 +11,7 @@ interface IEnvConfig {
   refreshSecret: string;
   mongodbUri: string;
   geminiKey: string;
+  imageKey: string,
 }
 
 const _conf: IEnvConfig = {
@@ -22,6 +23,7 @@ const _conf: IEnvConfig = {
   refreshSecret: process.env.REFRESH_TOKEN_SECRET as string,
   mongodbUri: process.env.MONGODB_URI as string,
   geminiKey: process.env.GEMINI_API_KEY as string,
+  imageKey: process.env.UNSPLASH_ACCESS_KEY as string,
 };
 
 export const envConfig = Object.freeze(_conf);
