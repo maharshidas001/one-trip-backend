@@ -22,7 +22,7 @@ app.use('/api/v1', homeRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/trip', tripRouter);
 
-// Global error handler
+// Global error handler (always in the last to catch every error)
 app.use(globalErrorHandler);
 
 export default app;
