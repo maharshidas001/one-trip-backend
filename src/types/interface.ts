@@ -33,10 +33,17 @@ export interface TripItinerary {
       time: string;
       description: string;
       location: string;
+      ticketPrice: number;
     }>;
   }>;
   budgetBreakdown: {
     category: string;
     estimateCost: string;
-  }
+  },
+  travelingWith: TravelingWith;
+  travelType: TravelType;
+  travlerCount: number;
+  budget: BudgetType;
+  stay: StayType;
+  foodPreferance: FoodType;
 };

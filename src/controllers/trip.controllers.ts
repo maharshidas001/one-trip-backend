@@ -2,10 +2,9 @@ import { AppError } from "../utils/appError.js";
 import { successResponse } from "../utils/successResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import type { NextFunction, Request, Response } from "express";
-import { envConfig } from "../config/envConfig.js";
 import { Trip } from "../models/trip.models.js";
 import { generateTrip } from "../services/genai.js";
-import type { TripItinerary, TripRequest } from "../types/interface.js";
+import type { TripRequest } from "../types/interface.js";
 import { getDestinationImage } from "../services/image.js";
 
 // Get all trips
@@ -78,6 +77,7 @@ const createTrip = asyncHandler(async (
       ...completeGeneratedTrip,
       createdBy: sub,
       imageUrl,
+      foodPreferance, stay, travelType, travelingWith, travlerCount,
     });
     await newTrip.save();
 

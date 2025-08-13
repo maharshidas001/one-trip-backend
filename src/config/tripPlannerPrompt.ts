@@ -26,6 +26,7 @@ export const tripPrompt = (tripDetails: TripRequest): string => {
           time: string,
           description: string,
           location: string,
+          ticketPrice: number;
         }],
       }],
       budgetBreakdown: {

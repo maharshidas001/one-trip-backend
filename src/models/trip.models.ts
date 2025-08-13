@@ -48,6 +48,10 @@ const tripSchema = new Schema<ITripSchema>({
             type: String,
             required: true
           },
+          ticketPrice: {
+            type: Number,
+            required: true,
+          }
         }
       ],
     }
@@ -61,6 +65,26 @@ const tripSchema = new Schema<ITripSchema>({
       type: String,
       required: true,
     },
+  },
+  travelingWith: {
+    type: String,
+    required: true,
+  },
+  travelType: {
+    type: String,
+    required: true,
+  },
+  travlerCount: {
+    type: Number,
+    required: true,
+  },
+  stay: {
+    type: String,
+    required: true,
+  },
+  foodPreferance: {
+    type: String,
+    required: true,
   },
 }, { timestamps: true });
 
