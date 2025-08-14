@@ -1,6 +1,7 @@
 import app from "./app.js";
 import { envConfig } from "./config/envConfig.js";
 import connectDB from "./services/db.js";
+import { absoluteUrl } from "./utils/absoluteUrl.js";
 
 const port = envConfig.port || 3000;
 

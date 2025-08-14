@@ -1,15 +1,18 @@
 import mongoose, { Document, Schema } from "mongoose";
 import { AppError } from "../utils/appError.js";
 import bcrypt from 'bcrypt';
-import { sign, verify } from '../utils/jwt.js';
+import { sign } from '../utils/jwt.js';
 import { envConfig } from "../config/envConfig.js";
+import type { IUserSubscription } from "../types/interface.js";
 
-interface IUserSchema extends Document {
+interface IUserSchema extends IUserSubscription, Document {
   fullName: string;
   email: string;
   password: string;
   accessToken?: string;
   refreshToken?: string;
+  isSubscribed: boolean;
+  availableFreeLimit: number;
   comparePassword: (password: string) => Promise<boolean>;
   createAccessToken: () => string;
   createRefreshToken: () => string;
@@ -42,7 +45,34 @@ const userSchema = new Schema<IUserSchema>({
   refreshToken: {
     type: String,
     default: null
-  }
+  },
+  isSubscribed: {
+    type: Boolean,
+    default: false,
+  },
+  availableFreeLimit: {
+    type: Number,
+    default: 5,
+    min: 0,
+  },
+  stripeCustomerId: {
+    type: String,
+    required: true,
+  },
+  stripeSubscriptionId: {
+    type: String,
+  },
+  stripePriceId: {
+    type: String,
+  },
+  stripeCurrentPeriodEnd: {
+    type: Date,
+  },
+  subscriptionStatus: {
+    type: String,
+    enum: ['free', 'active', 'canceled', 'past_due'],
+    default: 'free'
+  },
 }, { timestamps: true });
 
 // Mongoose Middlewares

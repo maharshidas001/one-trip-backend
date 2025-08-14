@@ -12,6 +12,9 @@ interface IEnvConfig {
   mongodbUri: string;
   geminiKey: string;
   imageKey: string,
+  frontendUrl: string,
+  stripeKey: string,
+  webhookSecret: string;
 }
 
 const _conf: IEnvConfig = {
@@ -24,6 +27,9 @@ const _conf: IEnvConfig = {
   mongodbUri: process.env.MONGODB_URI as string,
   geminiKey: process.env.GEMINI_API_KEY as string,
   imageKey: process.env.UNSPLASH_ACCESS_KEY as string,
+  frontendUrl: process.env.FRONTEND_URL as string,
+  stripeKey: process.env.STRIPE_SECRET_KEY as string,
+  webhookSecret: process.env.STRIPE_WEBHOOK_SECRET as string,
 };
 
 export const envConfig = Object.freeze(_conf);

@@ -47,3 +47,11 @@ export interface TripItinerary {
   stay: StayType;
   foodPreferance: FoodType;
 };
+
+export interface IUserSubscription {
+  stripeCustomerId: string;
+  stripeSubscriptionId: string;
+  stripePriceId: string;
+  stripeCurrentPeriodEnd: Date;
+  subscriptionStatus: 'free' | 'active' | 'canceled' | 'past_due';
+};
