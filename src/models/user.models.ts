@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import { sign } from "../libs/jwt";
 import { envConfig } from "../config/envConfig";
 
-const userSchema = new Schema<IUserMongooseModel, Document>({
+const userSchema = new Schema<IUserMongooseModel>({
   fullName: {
     type: String,
     required: [true, 'Full name is required.'],
@@ -27,7 +27,6 @@ const userSchema = new Schema<IUserMongooseModel, Document>({
   },
   refreshToken: {
     type: String,
-    required: true,
     default: null
   },
 }, { timestamps: true });
@@ -67,4 +66,4 @@ userSchema.methods.createRefreshToken = async function (): Promise<string> {
   );
 };
 
-export const User = mongoose.model<IUserMongooseModel, Document>("User", userSchema);
+export const User = mongoose.model<IUserMongooseModel>("User", userSchema);
