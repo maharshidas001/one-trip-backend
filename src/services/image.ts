@@ -12,7 +12,9 @@ export const getDestinationImage = async (destination: string): Promise<string> 
   const destinationImage = await fetch(PROMPT);
   const resDestinationImage = await destinationImage.json();
 
-  const exactImageUrl: string = resDestinationImage.results[0].urls.raw;
+  const randomIndexNumber = Math.floor(Math.random() * resDestinationImage.results.length);
+
+  const exactImageUrl: string = resDestinationImage.results[randomIndexNumber].urls.raw;
 
   return exactImageUrl;
 };
