@@ -1,0 +1,43 @@
+{
+  "name": "one-trip-backend",
+  "version": "1.0.0",
+  "description": "A backend for One Trip frontend uses AI to generate trips for users.",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon src/server.ts",
+    "start": "node dist/server.js",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maharshidas001/one-trip-backend.git"
+  },
+  "keywords": [
+    "rest-api"
+  ],
+  "author": "Omm",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maharshidas001/one-trip-backend/issues"
+  },
+  "homepage": "https://github.com/maharshidas001/one-trip-backend#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jose": "^6.0.12",
+    "mongoose": "^8.17.2"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.3.0",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}
