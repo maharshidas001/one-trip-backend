@@ -14,56 +14,54 @@ const createUser = asyncHandler(async (
 ) => {
   const { fullName, email, password } = req.body;
 
-  try {
-    // check if user already exitst
-    const isExistedUser = await User.findOne({ email });
-    if (isExistedUser?._id) {
-      throw new ApiError('User already exists with this email!', 409);
-    };
 
-    // create user
-    const userRes = await User.create({
-      fullName,
-      email,
-      password
-    });
+  // check if user already exitst
+  const isExistedUser = await User.findOne({ email });
+  if (isExistedUser?._id) {
+    throw new ApiError('User already exists with this email!', 409);
+  };
 
-    // Check if the user is created
-    if (!userRes._id) {
-      throw new ApiError('User not created! Try again.', 500);
-    }
+  // create user
+  const userRes = await User.create({
+    fullName,
+    email,
+    password
+  });
 
-    // create tokens
-    const accessToken: string = await userRes.createAccessToken();
-    const refreshToken: string = await userRes.createRefreshToken();
-
-    // save tokens to database
-    userRes.refreshToken = refreshToken;
-    await userRes.save({ validateBeforeSave: false });
-
-    // delete the password before send to api
-    const userObj = userRes.toObject() as Record<string, any>;
-    delete userObj.password;
-
-    const accessOption = {
-      httpOnly: true,
-      secure: true,
-      maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
-    };
-
-    const refreshOption = {
-      httpOnly: true,
-      secure: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
-    };
-
-    return res.status(201)
-      .cookie('accessToken', accessToken, accessOption)
-      .cookie('refreshToken', refreshToken, refreshOption)
-      .json(apiResponse('User created successfuly.', 201, { ...userObj, accessToken, refreshToken }));
-  } catch (error) {
-    throw new ApiError('User creation failed!', 500);
+  // Check if the user is created
+  if (!userRes._id) {
+    throw new ApiError('User not created! Try again.', 500);
   }
+
+  // create tokens
+  const accessToken: string = await userRes.createAccessToken();
+  const refreshToken: string = await userRes.createRefreshToken();
+
+  // save tokens to database
+  userRes.refreshToken = refreshToken;
+  await userRes.save({ validateBeforeSave: false });
+
+  // delete the password before send to api
+  const userObj = userRes.toObject() as Record<string, any>;
+  delete userObj.password;
+
+  const accessOption = {
+    httpOnly: true,
+    secure: true,
+    maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
+  };
+
+  const refreshOption = {
+    httpOnly: true,
+    secure: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
+  };
+
+  return res.status(201)
+    .cookie('accessToken', accessToken, accessOption)
+    .cookie('refreshToken', refreshToken, refreshOption)
+    .json(apiResponse('User created successfuly.', 201, { ...userObj, accessToken, refreshToken }));
+
 });
 
 // Login User --------------------
@@ -74,50 +72,46 @@ const loginUser = asyncHandler(async (
 ) => {
   const { email, password } = req.body;
 
-  try {
-    // check if user already exitst
-    const userRes = await User.findOne({ email });
-    if (!userRes) {
-      throw new ApiError('Invalid Email!', 400);
-    };
+  // check if user already exitst
+  const userRes = await User.findOne({ email });
+  if (!userRes) {
+    throw new ApiError('Invalid Email!', 400);
+  };
 
-    // check if the password is correct
-    const isPassMatch: boolean = await userRes.comparePassword(password);
-    if (!isPassMatch) {
-      throw new ApiError('Password doesnot match!', 400);
-    };
+  // check if the password is correct
+  const isPassMatch: boolean = await userRes.comparePassword(password);
+  if (!isPassMatch) {
+    throw new ApiError('Password doesnot match!', 400);
+  };
 
-    // create tokens
-    const accessToken: string = await userRes.createAccessToken();
-    const refreshToken: string = await userRes.createRefreshToken();
+  // create tokens
+  const accessToken: string = await userRes.createAccessToken();
+  const refreshToken: string = await userRes.createRefreshToken();
 
-    // save tokens to database
-    userRes.refreshToken = refreshToken;
-    await userRes.save({ validateBeforeSave: false });
+  // save tokens to database
+  userRes.refreshToken = refreshToken;
+  await userRes.save({ validateBeforeSave: false });
 
-    // delete the password before send to api
-    const userObj = userRes.toObject() as Record<string, any>;
-    delete userObj.password;
+  // delete the password before send to api
+  const userObj = userRes.toObject() as Record<string, any>;
+  delete userObj.password;
 
-    const accessOption = {
-      httpOnly: true,
-      secure: true,
-      maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
-    };
+  const accessOption = {
+    httpOnly: true,
+    secure: true,
+    maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
+  };
 
-    const refreshOption = {
-      httpOnly: true,
-      secure: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
-    };
+  const refreshOption = {
+    httpOnly: true,
+    secure: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
+  };
 
-    return res.status(202)
-      .cookie('accessToken', accessToken, accessOption)
-      .cookie('refreshToken', refreshToken, refreshOption)
-      .json(apiResponse('User logged in successfuly.', 202, { ...userObj, accessToken, refreshToken }));
-  } catch (error) {
-    throw new ApiError('Login failed!', 500);
-  }
+  return res.status(202)
+    .cookie('accessToken', accessToken, accessOption)
+    .cookie('refreshToken', refreshToken, refreshOption)
+    .json(apiResponse('User logged in successfuly.', 202, { ...userObj, accessToken, refreshToken }));
 });
 
 // Logout User ------------------
@@ -128,42 +122,38 @@ const logoutUser = asyncHandler(async (
 ) => {
   const { _id } = (req as any).user;
 
-  try {
-    const userRes = await User.findOneAndUpdate(
-      _id,
-      {
-        $set: {
-          refreshToken: null,
-        }
-      },
-      {
-        new: true
+  const userRes = await User.findOneAndUpdate(
+    _id,
+    {
+      $set: {
+        refreshToken: null,
       }
-    );
+    },
+    {
+      new: true
+    }
+  );
 
-    if (!userRes) {
-      throw new ApiError('No user to logout!', 500);
-    };
+  if (!userRes) {
+    throw new ApiError('No user to logout!', 500);
+  };
 
-    const accessOption = {
-      httpOnly: true,
-      secure: true,
-      maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
-    };
+  const accessOption = {
+    httpOnly: true,
+    secure: true,
+    maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
+  };
 
-    const refreshOption = {
-      httpOnly: true,
-      secure: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
-    };
+  const refreshOption = {
+    httpOnly: true,
+    secure: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
+  };
 
-    return res.status(200)
-      .clearCookie('accessToken', accessOption)
-      .clearCookie('refreshToken', refreshOption)
-      .json(apiResponse('Logout successfuly.', 200));
-  } catch (error) {
-    throw new ApiError('Logout failed!', 500);
-  }
+  return res.status(200)
+    .clearCookie('accessToken', accessOption)
+    .clearCookie('refreshToken', refreshOption)
+    .json(apiResponse('Logout successfuly.', 200));
 });
 
 // Get User
@@ -172,14 +162,21 @@ const authStatus = asyncHandler(async (
   res: Response,
   next: NextFunction
 ) => {
-  const userData = (req as any).user;
+  const { accessToken } = req.cookies;
 
-  const userObj = userData.toObject() as Record<string, any>;
-  delete userObj.password;
-  delete userObj.refreshToken;
+  if (!accessToken) {
+    throw new ApiError('Unathorized!', 401);
+  };
+
+  const decodedToken = await verify(accessToken, envConfig.accessSecret);
+
+  const userRes = await User.findById(decodedToken.sub).select('-password -refreshToken -createdAt -updatedAt -__v');
+  if (!userRes) {
+    throw new ApiError('No user found!', 404);
+  };
 
   return res.status(200)
-    .json(apiResponse('Authorized.', 401, { userObj, isAuthenticated: true }));
+    .json(apiResponse('Authorized.', 401, { userRes, isAuthenticated: true }));
 });
 
 // Refresh access token
@@ -194,45 +191,41 @@ const renewAccessToken = asyncHandler(async (
     throw new ApiError('Unathorized!', 401);
   };
 
-  try {
-    const deocdedToken = await verify(refreshToken, envConfig.refreshSecret);
+  const deocdedToken = await verify(refreshToken, envConfig.refreshSecret);
 
-    const userRes = await User.findById(deocdedToken.sub);
-    if (!userRes) {
-      throw new ApiError('No user found!', 404);
-    };
+  const userRes = await User.findById(deocdedToken.sub);
+  if (!userRes) {
+    throw new ApiError('No user found!', 404);
+  };
 
-    if (refreshToken != userRes.refreshToken) {
-      throw new ApiError('Expired refresh token!', 401);
-    };
+  if (refreshToken != userRes.refreshToken) {
+    throw new ApiError('Expired refresh token!', 401);
+  };
 
-    // create tokens
-    const accessToken: string = await userRes.createAccessToken();
-    const newRefreshToken: string = await userRes.createRefreshToken();
+  // create tokens
+  const accessToken: string = await userRes.createAccessToken();
+  const newRefreshToken: string = await userRes.createRefreshToken();
 
-    // save tokens to database
-    userRes.refreshToken = newRefreshToken;
-    await userRes.save({ validateBeforeSave: false });
+  // save tokens to database
+  userRes.refreshToken = newRefreshToken;
+  await userRes.save({ validateBeforeSave: false });
 
-    const accessOption = {
-      httpOnly: true,
-      secure: true,
-      maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
-    };
+  const accessOption = {
+    httpOnly: true,
+    secure: true,
+    maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
+  };
 
-    const refreshOption = {
-      httpOnly: true,
-      secure: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
-    };
+  const refreshOption = {
+    httpOnly: true,
+    secure: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
+  };
 
-    return res.status(200)
-      .cookie('accessToken', accessToken, accessOption)
-      .cookie('refreshToken', newRefreshToken, refreshOption)
-      .json(apiResponse('Successfuly renew refresh token.', 200));
-  } catch (error) {
-    throw new ApiError('Failed to renew refresh token.', 403);
-  }
+  return res.status(200)
+    .cookie('accessToken', accessToken, accessOption)
+    .cookie('refreshToken', newRefreshToken, refreshOption)
+    .json(apiResponse('Successfuly renew refresh token.', 200));
 });
 
 export {
