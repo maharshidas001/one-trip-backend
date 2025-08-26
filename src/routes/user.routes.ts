@@ -9,7 +9,7 @@ userRouter.route('/login').post(loginUser);
 
 // Secured Routes
 userRouter.route('/logout').get(verifyToken, logoutUser);
-userRouter.route('/auth-status').get(verifyToken, authStatus);
+userRouter.route('/auth-status').get(authStatus);
 userRouter.route('/renew-refresh-token').get(renewAccessToken);
 
 export { userRouter };

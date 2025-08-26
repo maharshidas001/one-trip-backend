@@ -61,7 +61,6 @@ const createUser = asyncHandler(async (
     .cookie('accessToken', accessToken, accessOption)
     .cookie('refreshToken', refreshToken, refreshOption)
     .json(apiResponse('User created successfuly.', 201, { ...userObj, accessToken, refreshToken }));
-
 });
 
 // Login User --------------------
@@ -138,25 +137,13 @@ const logoutUser = asyncHandler(async (
     throw new ApiError('No user to logout!', 500);
   };
 
-  const accessOption = {
-    httpOnly: true,
-    secure: true,
-    maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
-  };
-
-  const refreshOption = {
-    httpOnly: true,
-    secure: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
-  };
-
   return res.status(200)
-    .clearCookie('accessToken', accessOption)
-    .clearCookie('refreshToken', refreshOption)
+    .clearCookie('accessToken')
+    .clearCookie('refreshToken')
     .json(apiResponse('Logout successfuly.', 200));
 });
 
-// Get User
+// Get User --------------------
 const authStatus = asyncHandler(async (
   req: Request,
   res: Response,
@@ -165,7 +152,8 @@ const authStatus = asyncHandler(async (
   const { accessToken } = req.cookies;
 
   if (!accessToken) {
-    throw new ApiError('Unathorized!', 401);
+    return res.status(200)
+      .json(apiResponse('Unathorized!', 401, { userRes: null, isAuthenticated: false }));
   };
 
   const decodedToken = await verify(accessToken, envConfig.accessSecret);
@@ -179,7 +167,7 @@ const authStatus = asyncHandler(async (
     .json(apiResponse('Authorized.', 401, { userRes, isAuthenticated: true }));
 });
 
-// Refresh access token
+// Refresh access token -------------------
 const renewAccessToken = asyncHandler(async (
   req: Request,
   res: Response,

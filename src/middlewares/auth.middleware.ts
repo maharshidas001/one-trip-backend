@@ -10,7 +10,7 @@ export const verifyToken = asyncHandler(async (
   res: Response,
   next: NextFunction
 ) => {
-  const { accessToken } = req.cookies || req.header('Authorization')?.replace('Bearer ', '');
+  const { accessToken } = req.cookies;
 
   if (!accessToken) throw new ApiError('Unauthorised!', 401);
 
