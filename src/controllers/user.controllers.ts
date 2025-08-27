@@ -198,23 +198,25 @@ const renewAccessToken = asyncHandler(async (
   userRes.refreshToken = newRefreshToken;
   await userRes.save({ validateBeforeSave: false });
 
+  const isProd = envConfig.nodeEnv === 'production';
+
   const accessOption = {
     httpOnly: true,
-    secure: true,
-    sameSite: "none" as const,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
     maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
   };
 
   const refreshOption = {
     httpOnly: true,
-    secure: true,
-    sameSite: "none" as const,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
   };
 
   return res.status(200)
-    .cookie('accessToken', accessToken, accessOption)
-    .cookie('refreshToken', newRefreshToken, refreshOption)
+    .cookie('accessToken', accessToken, accessOption as any)
+    .cookie('refreshToken', newRefreshToken, refreshOption as any)
     .json(apiResponse('Successfuly renew refresh token.', 200));
 });
 
