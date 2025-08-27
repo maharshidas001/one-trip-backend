@@ -45,21 +45,25 @@ const createUser = asyncHandler(async (
   const userObj = userRes.toObject() as Record<string, any>;
   delete userObj.password;
 
+  const isProd = envConfig.nodeEnv === 'production';
+
   const accessOption = {
     httpOnly: true,
-    secure: true,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
     maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
   };
 
   const refreshOption = {
     httpOnly: true,
-    secure: true,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
   };
 
   return res.status(201)
-    .cookie('accessToken', accessToken, accessOption)
-    .cookie('refreshToken', refreshToken, refreshOption)
+    .cookie('accessToken', accessToken, accessOption as any)
+    .cookie('refreshToken', refreshToken, refreshOption as any)
     .json(apiResponse('User created successfuly.', 201, { ...userObj, accessToken, refreshToken }));
 });
 
@@ -95,21 +99,25 @@ const loginUser = asyncHandler(async (
   const userObj = userRes.toObject() as Record<string, any>;
   delete userObj.password;
 
+  const isProd = envConfig.nodeEnv === 'production';
+
   const accessOption = {
     httpOnly: true,
-    secure: true,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
     maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
   };
 
   const refreshOption = {
     httpOnly: true,
-    secure: true,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
   };
 
   return res.status(202)
-    .cookie('accessToken', accessToken, accessOption)
-    .cookie('refreshToken', refreshToken, refreshOption)
+    .cookie('accessToken', accessToken, accessOption as any)
+    .cookie('refreshToken', refreshToken, refreshOption as any)
     .json(apiResponse('User logged in successfuly.', 202, { ...userObj, accessToken, refreshToken }));
 });
 
