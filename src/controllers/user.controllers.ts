@@ -210,14 +210,14 @@ const renewAccessToken = asyncHandler(async (
 
   const accessOption = {
     httpOnly: true,
-    secure: isProd,
+    secure: true,
     sameSite: isProd ? "none" : "lax",
     maxAge: 1 * 24 * 60 * 60 * 1000, // 1d
   };
 
   const refreshOption = {
     httpOnly: true,
-    secure: isProd,
+    secure: true,
     sameSite: isProd ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7d
   };

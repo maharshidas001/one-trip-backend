@@ -69,6 +69,7 @@ const createTrip = asyncHandler(async (
 
     // generate the trip
     const generatedTrip = await generateTrip({ budget, dateRange, destination, foodPreferance, stay, travelType, travelingWith, travlerCount });
+
     // parse the trip
     const completeGeneratedTrip = JSON.parse(generatedTrip.text!);
 
